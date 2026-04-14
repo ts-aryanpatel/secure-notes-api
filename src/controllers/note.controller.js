@@ -1,97 +1,72 @@
 import { createNote, getAllNotes, getNoteById, updateNote, deleteNote } from "../services/note.service.js";
+import asyncHandler from "../middlewares/asyncHandler.js";
 
-export const createNoteController = async (req, res) => {
-    try {
-        const { title, content } = req.body;
+export const createNoteController = asyncHandler(async (req, res) => {
 
-        const note = await createNote({
-            title,
-            content,
-            userId: req.user.id
-        });
+    const { title, content } = req.body;
 
-        res.status(201).json({
-            success: true,
-            message: "Note created successfully",
-            data: note
-        });
-    } catch (error) {
-        res.status(400).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
+    const note = await createNote({
+        title,
+        content,
+        userId: req.user.id
+    });
 
-export const getAllNotesController = async (req, res) => {
-    try {
-        const notes = await getAllNotes(req.user.id);
+    res.status(201).json({
+        success: true,
+        message: "Note created successfully",
+        data: note
+    });
+});
 
-        res.status(200).json({
-            success: true,
-            message: "Notes fetched successfully",
-            data: notes
-        });
-    } catch (error) {
-        res.status(400).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
+export const getAllNotesController = asyncHandler(async (req, res) => {
+    
+    const notes = await getAllNotes(req.user.id);
 
-export const getNoteController = async (req, res) => {
-    try {
-        const { id } = req.params;
+    res.status(200).json({
+        success: true,
+        message: "Notes fetched successfully",
+        data: notes
+    });
+    
+});
 
-        const note = await getNoteById(id, req.user.id);
+export const getNoteController = asyncHandler(async (req, res) => {
+    
+    const { id } = req.params;
 
-        res.status(200).json({
-            success: true,
-            message: "Note fetched successfully",
-            data: note
-        });
-    } catch (error) {
-        res.status(400).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
+    const note = await getNoteById(id, req.user.id);
 
-export const updateNoteController = async (req, res) => {
-    try {
-        const { id } = req.params;
+    res.status(200).json({
+        success: true,
+        message: "Note fetched successfully",
+        data: note
+    });
+   
+});
 
-        const updatedNote = await updateNote(id, req.user.id, req.body);
+export const updateNoteController = asyncHandler(async (req, res) => {
+    
+    const { id } = req.params;
 
-        res.status(200).json({
-            success: true,
-            message: "Note updated Successfully",
-            data: updatedNote
-        });
-    } catch (error) {
-        res.status(400).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
+    const updatedNote = await updateNote(id, req.user.id, req.body);
 
-export const deleteNoteController = async (req, res) => {
-    try {
-        const { id } = req.params;
+    res.status(200).json({
+        success: true,
+        message: "Note updated Successfully",
+        data: updatedNote
+    });
+   
+});
 
-        const result = await deleteNote(id, req.user.id);
+export const deleteNoteController = asyncHandler(async (req, res) => {
+    
+    const { id } = req.params;
 
-        res.status(200).json({
-            success: true,
-            message: result.message
-        });
-    } catch (error) {
-        res.staus(400).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
+    const result = await deleteNote(id, req.user.id);
+
+    res.status(200).json({
+        success: true,
+        message: result.message
+    });
+   
+});

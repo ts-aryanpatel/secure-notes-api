@@ -1,4 +1,5 @@
 import Note from "../models/note.model.js";
+import AppError from "../utils/AppError.js";
 
 export const createNote = async ({ title, content, userId }) => {
     const note = await Note.create({
@@ -20,11 +21,11 @@ export const getNoteById = async (noteId, userId) => {
     const note = await Note.findById(noteId);
 
     if (!note) {
-        throw new Error("Note not found");
+        throw new AppError("Note not found", 404);
     }
 
     if (note.userId.toString() !== userId) {
-        throw new Error("Unauthorized access");
+        throw new AppError("Unauthorized access", 403);
     }
 
     return note;
@@ -34,11 +35,11 @@ export const updateNote = async (noteId, userId, data) => {
     const note = await Note.findById(noteId);
 
     if (!note) {
-        throw new Error("Note not found");
+        throw new AppError("Note not found", 404);
     }
 
     if (note.userId.toString() !== userId) {
-        throw new Error("Unauthorized access");
+        throw new AppError("Unauthorized access", 403);
     }
 
     note.title = data.title || note.title;
@@ -53,11 +54,11 @@ export const deleteNote = async (noteId, userId) => {
     const note = await Note.findById(noteId);
 
     if (!note) {
-        throw new Error("Note not found");
+        throw new AppError("Note not found", 404);
     }
 
     if (note.userId.toString() !== userId) {
-        throw new Error("Unauthorized access");
+        throw new AppError("Unauthorized access", 403);
     }
 
     await note.deleteOne();
